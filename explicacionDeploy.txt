@@ -1,0 +1,22 @@
+En el archivo package.json tenemos dos scripts:
+
+"scripts": {
+        "build": "vite build",
+        "dev": "vite"
+}
+
+Dev es para desarrollo (npm run dev). Este lo utilizamos mientras construimos la aplicacion.
+El problema que al detener el servidor de desarrollo (control + c), entonces debemos hacer build
+
+Build es para produccion (npm run build), con el que compilamos los assets dentro de la carpeta public/build
+Entonces ahora sin tener el servidor levantado funcionara.
+PERO, en el gitignore, se encuentra excluida de git la carpeta public/build, lo que quiere decir que si se usa git para el deploy la carpeta no se subira.
+
+OPCIONES:
+1) hacer primero el comando deploy, y luego npm run build, para una vez en el servidor de produccion se genere la carpeta
+2) Hay casos donde el servidor no permite ejecutar ese tipo de comandos, asi que se debe eliminar la linea de exclusion del git ignore y ejecutar npm run build (sucede en servidoes compartidos)
+
+LA DIRECTIVA  @vite(['resources/css/app.css', 'resources/js/app.js'])
+definira la ruta de los assets para importarse en desarrollo
+
+Cada vez que se hagan cambios, se requiere volver a compilar estos para visualizarse, mediante npm run build

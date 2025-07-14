@@ -1,0 +1,30 @@
+
+Por proteger rutas nos referimos a que solo usuarios que hayan iniciado sesion puedan ingresar a las rutas
+
+Se hace por medio de middleware en las rutas o en los controladores (modificando la clase abstracta Controller que extiende de nuestros controladores por defecto)
+
+1) POR RUTAS
+Route::view('nosotros', 'about')->name('about')->middleware('auth');
+
+2) POR CONTROLADOR
+namespace App\Http\Controllers;
+
+// Hereda todas las funcionalidades del controlador base de Laravel para usar los middlewares
+use Illuminate\Routing\Controller as BaseController;
+
+abstract class Controller extends BaseController
+{
+    //
+}
+
+class PostController extends Controller {
+
+    // Metodo obtenido de heredar de Controller
+    public function __construct()
+    {
+        // $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+}
+
+Estos inspeccionaran la peticion verificando si el usuario esta autenticado. De No estarlo, redireccionara al login de laravel breeze, y si lo esta, ira a la vista del controlador y ruta

@@ -1,0 +1,27 @@
+Con el comando php artisan lang:publish
+se crea la carpeta lang, y dentro vendran todas las config dentro de un array.
+Dentro podemos buscar la config que queremos cambiar, y modificarle el valor del string.
+
+AUNQUE LO IDEAL ES IR AL ARCHIVO ENV, A APP_LOCALE=en , CAMBIARLO A es, LUEGO CREAR EN LANG LA CARPETA es
+y dento crear el archivo php para la config que queremos modificar, y adentro abrir un array y poner las modifaciones respectivas.
+
+Si un mensaje no se encuentra definido en el idioma que creamos, se usara en el evn APP_FALLBACK_LOCALE=en, usando por defecto ingles
+
+SIN EMBARGO TRADUCIR CADA UNO SE PUEDE VOLVER TEDIOSO, ASI QUE LA COMUNIDAD CREO UN PAQUETE NO OFICIAL PERO MUY USADO PARA ELLO
+composer require --dev laravel-lang/lang
+php artisan lang:update
+
+Y de esta forma, habiendo previamente cambiado el APP_LOCALE a es, creara todos los archivos necesarios con mensajes en español de forma automatica, junto a unos archivos .json
+
+Y si queremos agregar soporte para otro lenguaje hacemos php artisan lang:add pt (portugues)
+
+Y PARA TRADUCIR TEXTO DE LA ESTRUCTURA DE LA PAGINA, SE PUEDE USAR LO SIGUIENTE
+
+<h1>Title</h1>
+SE CAMBIA A 
+<h1>{{ __('Tille')}}</h1>
+pasandole una traduccion por json, y esa traduccion se agrega en el es.json:
+"Title": "Titulo
+Y en caso de no encontrarla, devolvera el mismo string
+
+TODO ESTO ES RECOMENDABLE, YA QUE SE RECOMIENDA POR DEFECTO USAR EL IDIOMA INGLES

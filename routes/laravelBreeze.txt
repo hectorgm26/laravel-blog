@@ -1,0 +1,33 @@
+
+Laravel breeze ofrece un punto de partida para ofrecer autentificacion, añadiendo vistas y controladores de autentificacion personalizables segun nuestras necesidades
+
+Funcionalidades:
+
+1) Vista login - ingreso de usuarios
+2) Vista register - registrar usuario
+3) Vista dashboard
+4) Vista forgot-password (enviara un mail de verificacion. PERO COMO NO TENEMOS CONFIGURADO UN PROVEEDOR DE EMAILS, estas verificaciones estaran en storage/logs/laravel.log)
+5) Vista reset-password
+6) Vista verify-email
+
+Estos se relacionan con los controladores de la carpeta Auth, y con el enrutado auth, para configurarlos y adaptarlos segun nuestras necesidades, con igualmente las vistas de la carpeta auth
+
+En la carpeta components de las views hay varios componentes de Laravel Breeze listos para usar
+
+En la carpeta layouts habran componentes para la administracion del programa.
+1) app.blade (requiere estar autenticado)
+2) guest.blade (se utiliza para vistas de login, registro)
+3) navegation.blade (la navegacion del app)
+
+ESTOS COMPONENTES TIENEN UNA CLASE ASOCIADA en app/View/Components (AppLayout y GuestLayout). Y en el html blade se hace referencia a esas clases en vez de la vista, vez de la vista views/layouts/app.blade
+Por ende si queremos recibir alguna propiedad, se deben agregar como propiedades de la clase AppLayout, y luego crear un constructor con la propiedad, para luego en la vista app.blade agregarla
+
+Laravel breeze tambien trae
+<x-input-label for="title" :value="_('Title')" />
+<x-app-layout :meta-title="'Editing: ' . $post->title" :meta-description="$post->body">
+
+<x-input-label for="title" :value="__('Title')" /> {{-- para que funcione el forr, en el input el id debe ser igual al valor del foor en el x-input-label --}}
+
+<x-text-input id="title" name="title" type="text" value="{{ old('title', $post->title) }}" />
+<x-input-error :messages="$errors->get('title')" />
+<x-primary-button type="submit">{{ __('Send') }}</x-primary-button>

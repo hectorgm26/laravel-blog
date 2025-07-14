@@ -1,0 +1,46 @@
+
+Los modelos son clases que permiten al ORM Eloquent interactuar con la BD
+
+Cada tabla de la BD tiene un modelo que nos permitira interactuar con ella, haciendo operaciones CRUD por medio de POO.
+
+Un modelo de Eloquent extiende de Illuminate\Database\Eloquent\Model para heredar todas las funcionalidades
+
+Se pueden crear Modelos manualmente y extenderla de la ruta, o con el comando:
+php artisan make:model Post
+
+La convencion de nombre es PascalCase y el nombre en singular
+
+Con el ORM no es necesario especificar el nombre de la tabla en el controlador y el metodo, ya que Eloquent lo infiere a partir del nombre del modelo.
+
+Si el nombre del modelo es Post, Eloquent buscará una tabla llamada posts (en plural) en la base de datos.
+
+
+SIEMPRE QUE CREEMOS UN MODELO NECESITAREMOS UNA MIGRACION, y podemos crear el modelo y su migracion mediante:
+php artisan make:model Post -m
+
+
+PARA VER LAS FUNCIONALIDADES DE Eloquent, SE PUEDE USAR Tinker con php artisan tinker
+
+App\Models\Post::get();
+App\Models\Post::find(UnID);
+
+e incluso lo podemos guardar en una variable:
+$post1 = App\Models\Post::find(1);
+$post1->title
+$post1->body
+
+$post1->title = "Modificar el titulo"
+
+PERO EN LA DB ESTO SE MODIFICARA EN MEMORIA, NO EN LA DB, hasta que se haga el metodo
+$post1->save();
+Este permitira guardar nuevos datos, y actualizar ya existentes
+
+Para crear un nuevo post con Eloquent
+$post2 = new App\Models\Post
+y luego le asignamos valores a las propiedades
+$post2->title = "Titulo 2"
+
+Para eliminar un dato de la DB se usa 
+$post2->delete();
+
+SE CIERRA TINKER CON CONTROL + C

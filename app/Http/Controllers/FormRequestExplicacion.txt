@@ -1,0 +1,11 @@
+
+Para encapsular validaciones se crean form request para encapsular las logica
+Se usa: php artisan make:request SaveElNombreDeLoQueQueremosGuardar
+
+Este comando creara una nueva carpeta en app/Http/Requests
+
+Todo request tiene dos metodos, el metodo authorize y el metodo rules
+
+Authorize devuelve un boolean para verificar si la peticion esta autorizada para el usuario que la esta realizando. Por defecto devuelve false, es decir,nunca se autoriza y nunca se ejecutaran las reglas de validaciones del metodo rules
+
+DE ESTA FORMA, CADA VEZ QUE QUERAMOS MODIFICAR EL FORMULARIO, PRIMERO AGREGAREMOS EL CAMPO EN EL FORM-FIELD, LUEGO AGREGAREMOS LA VALIDACION EN EL FORM REQUEST Y FINALMENTE ACTUALIZAMOS EL $fillable en el modelo, agregandole el name del nuevo campo.

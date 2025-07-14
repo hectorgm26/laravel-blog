@@ -1,0 +1,28 @@
+
+Las migraciones son clases de php que permiten crear y modificar esquemas de bases de datos
+
+Las migraciones tienen dos metodos: up() y down()
+
+El metodo up() CREAR O MODIFICA LA ESTRUCTURA DE UNA TABLA
+El metodo down() ELIMINA O DESHACE/MODIFICA UNA TABLA, O SEA, DESHACER LOS CAMBIOS HECHOS
+
+Las migraciones por si solas no crean las tablas, ya que estan son simples planes de construccion.
+Las migraciones en la db tienen un campo batch, que indica el lote de ejecucion.
+
+
+Para crear migraciones se usan los siguientes comandos con composer y artisan para ejecutarlas:
+
+1. php artisan migrate (recorrera todas las migraciones del proyecto y ejecutara en el metodo up() en todas ellas, ejecutandose en un lote de ejecucion)
+
+2. php artisan migrate:rollback (ejecutara todos los metodos down() de todas las migraciones del ultimo lote de ejecucion de la tabla migrations de la DB, comunmente desapareciendo las tablas)
+
+3. php artisan migrate::rollback --step=ElNumeroDeCantidadesDeMigracionesQueQueremosDeshacer (SI QUEREMOS REALIZAR UN ROLLBACK SOLO DE LA ULTIMA MIGRACION, SIN TENER EN CUENTA LOS LOTES DE EJECUCION)
+
+4. php artisan migrate:fresh (eliminara todas las tablas y ejecutara todas las migraciones desde cero, borrando los datos que habian en la DB)
+
+5. php artisan make:migration create_nombretabla_table (crear nueva migracion en base a una nueva tabla o Modelo/Controlador)
+
+
+SI MODIFICAMOS LA ESTRUCTURA DE UNA TABLA DE UNA MIGRACION YA EXISTENTE Y EJECUTAMOS php artisan migrate, no cambiara nada, porque la migracion ya se ejecuto en un lote, y no se volvera a ejecutar, a menos que se haga un rollback
+
+EN CASO DE QUERER MODIFICAR LA ESTRUCTURA DE UNA TABLA EN UNA MIGRACION YA EJECUTADA, Y NO QUEREMOS PERDER DATOS, DEBEMOS CREAR UNA NUEVA MIGRACION. Debe tener el sufijo -to- entremedio del dato que se quiere agregar, y a que tabla. Ejemplo: add_body_to_posts_table. En esa migracion solo se deberan agregar los nuevos campos que se quieren en la tabla, sin repetir los ya existentes
