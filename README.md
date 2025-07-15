@@ -511,7 +511,7 @@ Este proyecto fue desarrollado siguiendo:
 
 ## 📋 Requisitos del sistema
 
-- PHP 8.1 o superior
+- PHP 8.2 o superior
 - Composer
 - Node.js y npm
 - Base de datos (MySQL, PostgreSQL, SQLite)
