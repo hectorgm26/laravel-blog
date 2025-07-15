@@ -74,7 +74,7 @@ Edita el archivo `.env` y configura tu base de datos:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=blog
+DB_DATABASE=laravel_blog
 DB_USERNAME=tu_usuario
 DB_PASSWORD=tu_contraseña
 ```
@@ -238,6 +238,224 @@ php artisan make:model Post -m
 php artisan test
 ```
 
+---
+
+## 📚 Guía de aprendizaje Laravel
+
+### 🛣️ Gestión de rutas
+
+**Ver todas las rutas del proyecto:**
+```bash
+php artisan route:list
+```
+
+**Filtrar rutas por palabra clave:**
+```bash
+php artisan route:list --path=PalabraParaFiltrar
+```
+
+**Rutas de recursos (Resource Routes):**
+En lugar de crear múltiples rutas individuales, Laravel permite generar todas las rutas CRUD automáticamente:
+
+```php
+// En lugar de crear 7 rutas individuales
+Route::resource('blog', PostController::class);
+```
+
+**Recomendaciones para el desarrollo:**
+1. Crear la vista que apunte a la ruta
+2. Crear la ruta con el controlador y método correspondiente
+3. Crear el controlador o método del controlador
+4. Establecer la lógica de validaciones respectivas
+
+### 🔐 Laravel Breeze - Sistema de autenticación
+
+Laravel Breeze ofrece un punto de partida completo para autenticación, añadiendo vistas y controladores personalizables.
+
+**Funcionalidades incluidas:**
+- **Vista login** - Ingreso de usuarios
+- **Vista register** - Registro de usuarios
+- **Vista dashboard** - Panel principal
+- **Vista forgot-password** - Recuperación de contraseña
+- **Vista reset-password** - Reseteo de contraseña
+- **Vista verify-email** - Verificación de email
+
+> **Nota:** Las verificaciones de email se guardan en `storage/logs/laravel.log` al no tener configurado un proveedor de emails.
+
+**Estructura de componentes:**
+```
+resources/views/
+├── components/           # Componentes reutilizables de Breeze
+└── layouts/
+    ├── app.blade.php    # Layout para usuarios autenticados
+    ├── guest.blade.php  # Layout para login/registro
+    └── navigation.blade.php # Navegación principal
+```
+
+**Componentes Blade de Breeze:**
+```blade
+<x-input-label for="title" :value="__('Title')" />
+<x-text-input id="title" name="title" type="text" value="{{ old('title', $post->title) }}" />
+<x-input-error :messages="$errors->get('title')" />
+<x-primary-button type="submit">{{ __('Send') }}</x-primary-button>
+```
+
+### 🛡️ Protección de rutas (Middleware)
+
+**Proteger rutas individuales:**
+```php
+Route::view('nosotros', 'about')->name('about')->middleware('auth');
+```
+
+**Proteger desde el controlador:**
+```php
+class PostController extends Controller
+{
+    public function __construct()
+    {
+        // Proteger solo métodos específicos
+        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        
+        // Proteger todos excepto algunos métodos
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+}
+```
+
+### 🌍 Sistema de traducción (Localization)
+
+**Configuración básica:**
+```bash
+# Publicar archivos de idioma
+php artisan lang:publish
+
+# Instalar traducciones de la comunidad
+composer require --dev laravel-lang/lang
+php artisan lang:update
+
+# Agregar nuevos idiomas
+php artisan lang:add pt
+```
+
+**Configuración en `.env`:**
+```env
+APP_LOCALE=es
+APP_FALLBACK_LOCALE=en
+```
+
+**Uso en vistas Blade:**
+```blade
+<h1>{{ __('Title') }}</h1>
+```
+
+**Archivo de traducciones (`lang/es.json`):**
+```json
+{
+    "Title": "Título",
+    "Welcome": "Bienvenido"
+}
+```
+
+### 🗄️ Migraciones de base de datos
+
+Las migraciones son clases PHP que permiten crear y modificar esquemas de bases de datos.
+
+**Métodos principales:**
+- `up()` - Crear o modificar estructura de tabla
+- `down()` - Eliminar o deshacer cambios
+
+**Comandos de migración:**
+```bash
+# Ejecutar todas las migraciones
+php artisan migrate
+
+# Deshacer último lote de migraciones
+php artisan migrate:rollback
+
+# Deshacer número específico de migraciones
+php artisan migrate:rollback --step=2
+
+# Eliminar todas las tablas y ejecutar desde cero
+php artisan migrate:fresh
+
+# Crear nueva migración
+php artisan make:migration create_posts_table
+
+# Modificar tabla existente
+php artisan make:migration add_body_to_posts_table
+```
+
+### 📊 Modelos Eloquent
+
+Los modelos permiten al ORM Eloquent interactuar con la base de datos usando POO.
+
+**Crear modelo:**
+```bash
+# Solo modelo
+php artisan make:model Post
+
+# Modelo con migración
+php artisan make:model Post -m
+```
+
+**Uso con Tinker:**
+```bash
+php artisan tinker
+```
+
+```php
+// Obtener todos los posts
+App\Models\Post::get();
+
+// Buscar por ID
+App\Models\Post::find(1);
+
+// Crear nuevo post
+$post = new App\Models\Post;
+$post->title = "Nuevo título";
+$post->save();
+
+// Actualizar post existente
+$post = App\Models\Post::find(1);
+$post->title = "Título modificado";
+$post->save();
+
+// Eliminar post
+$post->delete();
+```
+
+### 📝 Form Requests (Validaciones)
+
+Para encapsular la lógica de validación:
+
+```bash
+php artisan make:request SavePost
+```
+
+**Estructura del Form Request:**
+```php
+class SavePost extends FormRequest
+{
+    public function authorize()
+    {
+        return true; // Cambiar de false a true para autorizar
+    }
+
+    public function rules()
+    {
+        return [
+            'title' => 'required|min:3|max:255',
+            'body' => 'required|min:10'
+        ];
+    }
+}
+```
+
+**Flujo de trabajo para agregar nuevos campos:**
+1. Agregar campo en el formulario Blade
+2. Agregar validación en el Form Request
+3. Actualizar el array `$fillable` en el modelo
+
 ## 🧪 Testing
 
 ```bash
@@ -251,6 +469,38 @@ php artisan test --coverage
 php artisan test --filter PostTest
 ```
 
+## 💡 Tips y buenas prácticas
+
+### 🔍 Debugging y desarrollo
+- Usa `php artisan tinker` para probar modelos y consultas interactivamente
+- Los logs de aplicación se encuentran en `storage/logs/laravel.log`
+- Las verificaciones de email sin configurar SMTP aparecen en los logs
+
+### 🎨 Componentes y layouts
+- Los componentes de Breeze tienen clases asociadas en `app/View/Components`
+- `AppLayout` se usa para usuarios autenticados
+- `GuestLayout` se usa para login/registro
+- Para pasar propiedades a layouts, agrégalas como propiedades de la clase
+
+### 🛠️ Convenciones de Laravel
+- Modelos en **PascalCase** y **singular** (Post)
+- Tablas en **snake_case** y **plural** (posts)
+- Controladores terminan en **Controller** (PostController)
+- Migraciones descriptivas: `create_posts_table`, `add_body_to_posts_table`
+
+### 📄 Estructura de archivos
+```
+app/Http/
+├── Controllers/     # Lógica de negocio
+├── Requests/       # Validaciones de formularios
+└── Middleware/     # Filtros de peticiones
+
+resources/views/
+├── components/     # Componentes reutilizables
+├── layouts/       # Plantillas base
+└── posts/         # Vistas específicas de posts
+```
+
 ## 📚 Recursos de aprendizaje
 
 Este proyecto fue desarrollado siguiendo:
@@ -261,7 +511,7 @@ Este proyecto fue desarrollado siguiendo:
 
 ## 📋 Requisitos del sistema
 
-- PHP 8.2 o superior
+- PHP 8.1 o superior
 - Composer
 - Node.js y npm
 - Base de datos (MySQL, PostgreSQL, SQLite)
@@ -291,6 +541,14 @@ Este proyecto fue desarrollado siguiendo:
    ```
 5. **Abre** un Pull Request
 
+### 💡 Ideas para contribuir:
+- Agregar sistema de comentarios
+- Implementar categorías y tags
+- Mejorar el diseño responsive
+- Agregar más idiomas
+- Implementar sistema de búsqueda
+- Agregar tests unitarios
+
 ## 📝 Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
@@ -319,3 +577,5 @@ Durante el desarrollo de este proyecto se practicaron:
 ---
 
 ⭐ **Si este proyecto te ayudó a aprender Laravel, ¡considera darle una estrella!**
+
+💡 **¿Tienes sugerencias?** Abre un issue o contribuye directamente al código.
