@@ -35,7 +35,7 @@ Este proyecto está diseñado para practicar:
 - **Tailwind CSS** - Framework CSS
 - **Blade** - Motor de plantillas
 - **Laravel Lang** - Paquete de traducciones
-- **PHP 8.1+** - Versión recomendada
+- **PHP 8.2+** - Versión recomendada
 
 ## 🚀 Instalación
 
